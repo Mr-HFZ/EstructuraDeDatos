@@ -1,0 +1,119 @@
+class Nodo:
+    def __init__(self, valor):
+        self.valor = valor
+        self.siguiente = None
+        self.anterior = None
+
+class ListaDoblementeLigadaCircular:
+    def __init__(self):
+        self.cabeza = None
+        self.cola = None
+
+    # Insertar al final de la lista
+    def insertar(self, valor):
+        nuevo_nodo = Nodo(valor)
+
+        if self.cabeza is None:
+            self.cabeza = nuevo_nodo
+            self.cola = nuevo_nodo
+            self.cabeza.siguiente = self.cabeza  # Lista circular
+            self.cabeza.anterior = self.cabeza  # Lista circular
+        else:
+            self.cola.siguiente = nuevo_nodo
+            nuevo_nodo.anterior = self.cola
+            nuevo_nodo.siguiente = self.cabeza
+            self.cabeza.anterior = nuevo_nodo
+            self.cola = nuevo_nodo
+
+    # Borrar un valor de la lista
+    def borrar(self, valor):
+        if self.cabeza is None:
+            return False  # Lista vacía
+
+        actual = self.cabeza
+
+        while True:
+            if actual.valor == valor:
+                # Caso 1: Si es el único nodo
+                if self.cabeza == self.cola and self.cabeza.valor == valor:
+                    self.cabeza = None
+                    self.cola = None
+                # Caso 2: Si es la cabeza
+                elif actual == self.cabeza:
+                    self.cabeza = self.cabeza.siguiente
+                    self.cabeza.anterior = self.cola
+                    self.cola.siguiente = self.cabeza
+                # Caso 3: Si es la cola
+                elif actual == self.cola:
+                    self.cola = self.cola.anterior
+                    self.cola.siguiente = self.cabeza
+                    self.cabeza.anterior = self.cola
+                # Caso 4: Nodo intermedio
+                else:
+                    actual.anterior.siguiente = actual.siguiente
+                    actual.siguiente.anterior = actual.anterior
+                return True
+            actual = actual.siguiente
+            if actual == self.cabeza:
+                break
+        return False  # Valor no encontrado
+
+    # Buscar un valor en la lista
+    def buscar(self, valor):
+        if self.cabeza is None:
+            return False  # Lista vacía
+
+        actual = self.cabeza
+        while True:
+            if actual.valor == valor:
+                return True  # Valor encontrado
+            actual = actual.siguiente
+            if actual == self.cabeza:
+                break
+        return False  # Valor no encontrado
+
+    # Mostrar todos los elementos de la lista
+    def mostrar_lista(self):
+        if self.cabeza is None:
+            print("La lista está vacía.")
+            return
+
+        actual = self.cabeza
+        while True:
+            print(actual.valor, end=" <-> ")
+            actual = actual.siguiente
+            if actual == self.cabeza:
+                break
+        print("(circular)")
+
+# Método principal para probar la lista
+if __name__ == "__main__":
+    lista = ListaDoblementeLigadaCircular()
+
+    # Insertar elementos
+    lista.insertar(1)
+    lista.insertar(2)
+    lista.insertar(3)
+    lista.insertar(4)
+
+    # Mostrar la lista
+    print("Lista después de insertar:")
+    lista.mostrar_lista()
+
+    # Buscar elementos
+    print("¿Existe el valor 3 en la lista?", lista.buscar(3))
+    print("¿Existe el valor 5 en la lista?", lista.buscar(5))
+
+    # Borrar un valor
+    print("Borrar el valor 2:", lista.borrar(2))
+
+    # Mostrar la lista después de borrar
+    print("Lista después de borrar el valor 2:")
+    lista.mostrar_lista()
+
+    # Intentar borrar un valor no existente
+    print("Borrar el valor 5:", lista.borrar(5))
+
+    # Mostrar la lista después de intentar borrar un valor no existente
+    print("Lista después de intentar borrar el valor 5:")
+    lista.mostrar_lista()
