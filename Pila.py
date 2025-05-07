@@ -1,32 +1,32 @@
-from ListaSimple import Nodo
-from pila import Pila  
+from ListaSimple import Nodo  # Importamos la clase Nodo para los nodos de la pila
 
-class Cola:
-    def __init__(self) -> bool:
-        self.cab = None
-        self.fin = None
-    
-    def estavacia(self) -> None:
+class Pila:
+    def __init__(self) -> None:
+        self.cab = None  # Apuntador al primer nodo (cima de la pila)
+        self.fin = None  # Apuntador al último nodo (no necesario para la pila, pero se deja por consistencia)
+        
+    def estavacia(self) -> bool:
+        """Verifica si la pila está vacía"""
         return self.cab == None
-    
-    def mostrarCola(self) -> None:
-        aux = self.cab
-        print("Frente", end=", ")
-        while aux != None:
-            print(aux.valor, end=", ")
-            aux = aux.sig
-        print("Cola")
-    
-    def encolar(self, valor) -> None:
+        
+    def apilar(self, valor) -> None:
+        """Agrega un elemento al tope de la pila"""
         nodo = Nodo(valor)
         if self.estavacia():
             self.cab = nodo
             self.fin = nodo
         else:
-            self.fin.sig = nodo
-            self.fin = nodo
+            nodo.sig = self.cab
+            self.cab = nodo
     
-    def desencolar(self) -> None:
+    def tope(self) -> None:
+        """Devuelve el valor del tope de la pila"""
+        if self.estavacia():
+            return None
+        return self.cab.valor
+    
+    def desapilar(self) -> None:
+        """Elimina el elemento en el tope de la pila"""
         if self.estavacia():
             return None
         eliminado = self.cab
@@ -37,23 +37,13 @@ class Cola:
         else:
             self.cab = self.cab.sig
         
-        eliminado.sig = None    
-        return eliminado.valor
+        eliminado.sig = None
+        return eliminado
     
-    def mostrarFrente(self) -> None:
-        if self.estavacia():
-            return None
-        return self.cab.valor
-    
-    def mostrarFin(self) -> None:
-        if self.estavacia():
-            return None
-        return self.fin.valor
-
-    # Método para construir una pila desde la cola
-    def construir_pila_desde_cola(self) -> Pila:
-        pila = Pila()  # Creamos una nueva pila
-        while not self.estavacia():  # Mientras la cola no esté vacía
-            valor = self.desencolar()  # Desencolamos un elemento
-            pila.apilar(valor)  # Apilamos el elemento en la pila
-        return pila
+    def mostrarPila(self) -> None:
+        """Muestra todos los elementos de la pila desde el tope hasta la base"""
+        aux = self.cab
+        print("Tope")
+        while aux != None:
+            print(aux.valor)
+            aux = aux.sig
